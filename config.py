@@ -5,6 +5,7 @@ windowTimer = 2000      # Length of time (in ms) an image should be displayed
 renderFPS = 10
 imageSize = 0.25        # as a fraction of the screensize
 positionJitter = 0      # number of pixels around the centre of the screen where the image can be shown. Default at 0 as it can be jarring
+dayTime = True          # True or False to add time and date to the bottom right of the screen
 
 def windowTime():
     modifier = random.randint(0, windowTimer*0.2) - windowTimer*0.1

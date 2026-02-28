@@ -1,5 +1,6 @@
 from os import name
 import cv2
+import time
 import numpy as np
 from cv2 import VideoWriter, VideoWriter_fourcc
 from PIL import ImageFont, ImageDraw, Image
@@ -34,7 +35,7 @@ width = root.winfo_screenwidth()
 height = root.winfo_screenheight()
 
 # Define fonts
-fontpath = "assets/fonts/Formula1-Regular.ttf"
+fontpath = "assets/fonts/GT-Regular.otf"
 font200 = ImageFont.truetype(fontpath, 200)
 font150 = ImageFont.truetype(fontpath, 150)
 font100 = ImageFont.truetype(fontpath, 100)
@@ -76,7 +77,11 @@ while True:
                         img_pil = Image.fromarray(frame)
                         draw = ImageDraw.Draw(img_pil)
                         img_pil.paste(image, (round((width - imageWidth)/2 + random.randint(0,config.positionJitter*2)-config.positionJitter), round((height-imageHeight)/2 + random.randint(0,config.positionJitter*2)-config.positionJitter)))
-                        frame = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
+                        
+                        t = time.localtime()
+                        current_time = time.strftime("%H:%M", t)
+                        draw.text((width, height), current_time, fill='grey', font=font200, anchor='rd', align="right")
 
+                        frame = cv2.cvtColor(np.array(img_pil), cv2.COLOR_RGB2BGR)
                         cv2.imshow("video", frame)
                         cv2.waitKey(round(1000/config.renderFPS))
