@@ -75,3 +75,28 @@ def getCarClass(classString):
 def getEnduranceAngle(currPosition):
     #print("pos: " +str(currPosition) + " angle: " + str(-1*(currPosition-50)/50*33))
     return -1*(currPosition-50)/50*33
+
+def get_emoji_font_path():
+    """Locate a system font that supports emojis."""
+    # Common emoji font paths across OS
+    candidates = [
+        "/usr/share/fonts/truetype/noto/NotoColorEmoji.ttf",  # Linux
+        "/System/Library/Fonts/Apple Color Emoji.ttc",        # macOS
+        "C:\\Windows\\Fonts\\seguiemj.ttf",                  # Windows (Segoe UI Emoji)
+        "C:\\Windows\\Fonts\\seguisym.ttf",                  # Windows (Symbola fallback)
+    ]
+    
+    for path in candidates:
+        if os.path.exists(path):
+            return path
+    
+    # Fallback: try to find any .ttf/.ttc with 'emoji' in name
+    import glob
+    for ext in ['*.ttf', '*.ttc']:
+        matches = glob.glob(f"/usr/share/fonts/**/{ext}", recursive=True) + \
+                  glob.glob(f"C:/Windows/Fonts/*{ext}")
+        for m in matches:
+            if 'emoji' in m.lower():
+                return m
+                
+    raise FileNotFoundError("No emoji-supporting font found. Install 'Noto Color Emoji' or similar.")

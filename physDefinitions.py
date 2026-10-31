@@ -1,12 +1,13 @@
 import random
 import config
+import numpy as np
 
 def getEntryPoint():
         xPos = round(random.random() * config.winwidth)
         yPos = round(random.random() * config.winheight)
-        Vx = (random.random() - 0.5) * config.Vmax
-        Vy = (random.random() - 0.5) * config.Vmax
-        r = round(random.random() * config.rmax)
+        Vx = (random.random()) * config.Vmax
+        Vy = (random.random()) * config.Vmax
+        r = round(random.random() * (config.rmax - config.rmin)) + config.rmin
         if random.random() > 0.5: # Start on sides
                 if xPos > config.winwidth * 0.5:
                         xPos = config.winwidth
@@ -23,24 +24,27 @@ def getEntryPoint():
                         Vy = Vy
         return xPos, yPos, Vx, Vy, r
 
-def getNewPos(xPos, yPos, Vx, Vy):
+def getNewPos(xPos, yPos, Vx, Vy, r):
         yPos = yPos + Vy*config.dt - 0.5*config.g*config.dt**2
         xPos = xPos + Vx*config.dt
-        if yPos < 0:
-                yPos = yPos * -1
+        onScreen = True
+        if yPos - r < 0:
+                yPos = r + np.abs(yPos)
                 Vy = Vy * -1
                 Vy = Vy - config.g*config.dt
-        elif yPos > config.winheight:
-                yPos = config.winheight - (yPos - config.winheight)
+        elif yPos + r > config.winheight:
+                yPos = config.winheight - r #- (yPos - config.winheight)
                 Vy = Vy * -1
                 Vy = Vy - config.g*config.dt
-        if xPos < 0:
-                xPos = xPos * -1
-                Vx = Vx * -1
-        elif xPos > config.winwidth:
-               xPos = config.winwidth - (xPos - config.winwidth)
-               Vx = Vx * -1
-        return xPos, yPos, Vx, Vy
+        if xPos + r < 0:
+                xPos = xPos#r + np.abs(xPos)
+                Vx = Vx #* -1
+                onScreen = False
+        elif xPos - r > config.winwidth:
+               xPos = xPos#config.winwidth - r #- (xPos - config.winwidth)
+               Vx = Vx #* -1
+               onScreen = False
+        return xPos, yPos, Vx + (np.random.rand()-0.5)*config.VrandMax, Vy + (np.random.rand()-0.5)*config.VrandMax, onScreen
 
 def editPosMap(posMap, xPos, yPos, r):
         curPosMap = posMap
