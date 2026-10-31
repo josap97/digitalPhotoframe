@@ -100,3 +100,8 @@ def get_emoji_font_path():
                 return m
                 
     raise FileNotFoundError("No emoji-supporting font found. Install 'Noto Color Emoji' or similar.")
+
+def HEXtoRGB(hex):
+    h = hex.lstrip('#')
+    rgb = tuple(int(h[i:i+2], 16) for i in (0, 2, 4))
+    return rgb
