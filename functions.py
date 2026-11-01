@@ -84,6 +84,7 @@ def get_emoji_font_path():
         "/System/Library/Fonts/Apple Color Emoji.ttc",        # macOS
         "C:\\Windows\\Fonts\\seguiemj.ttf",                  # Windows (Segoe UI Emoji)
         "C:\\Windows\\Fonts\\seguisym.ttf",                  # Windows (Symbola fallback)
+        "assets\\fonts\\weather-icons-master\\font\\weathericons-regular-webfont.ttf",       # General comes with this package
     ]
     
     for path in candidates:

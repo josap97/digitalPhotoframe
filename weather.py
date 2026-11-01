@@ -6,6 +6,7 @@ import asyncio
 class hourWeather:
     def __init__(self):
         self.time = 0
+        self.timeStr = ''
         self.emoji = ''
         self.temperature = 0
         self.rain = 0
@@ -26,7 +27,8 @@ async def getWeather() -> None:
         dailyStr = f'{weather.kind.emoji}{weather.temperature} C {weather.feels_like} C\n'
         day = hourWeather()
         day.wID = 0
-        day.time = 'Today'
+        day.time = 0
+        day.timeStr = 'Today'
         day.temperature = weather.temperature
         day.feelsLike = weather.feels_like
         day.emoji = weather.kind.emoji
@@ -42,6 +44,7 @@ async def getWeather() -> None:
                         hw = hourWeather()
                         hw.wID = hc
                         hw.time = h.time.hour
+                        hw.timeStr = f'{h.time.hour} h'
                         hw.emoji = h.kind.emoji
                         hw.temperature = h.temperature
                         hw.rain = h.chances_of_rain
