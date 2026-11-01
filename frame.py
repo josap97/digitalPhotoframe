@@ -1,31 +1,41 @@
-from os import name
 import cv2
-import time
 import numpy as np
-from cv2 import VideoWriter, VideoWriter_fourcc
 from PIL import ImageFont, ImageDraw, Image
-import config
-import functions
-import math, sys, time, random, os
-if sys.version_info[0] == 2:  # the tkinter library changed it's name from Python 2 to 3.
-    import Tkinter
-    tkinter = Tkinter
-else:
-    import tkinter
-import weather
-import asyncio
+import config, functions, weather
+import math, sys, time, random, os, asyncio
+import tkinter as tk
+from tkinter import ttk
+
+rootDropdownPopup = tk.Tk()
+rootDropdownPopup.geometry("200x200")
+
+folderChoice = ''
+
+def dropdownWindowPick():
+    global folderChoice
+    folderChoice = cb.get()
+    rootDropdownPopup.destroy()
+
+def dropdownWindowClose():
+    rootDropdownPopup.destroy()
+    exit()
 
 folder_dir = "images/"
 folderArr = []
 customColours = ['#AD1D25','#1E4785','#C8CCCE','#388E3C','#E17000','#9C27B0', '#fff000']
-i = 0
-print('Type the number relating to the folder you want to display and hit enter:')
 for folder in os.listdir('images/'):
     folderArr.append(folder)
-    print(str(i) + '. ' + folder)
-    i = i + 1
-choice = input()
-folder_dir = folder_dir + folderArr[int(choice)] + '/'
+
+# Combobox  
+cb = ttk.Combobox(rootDropdownPopup, values=folderArr)
+cb.set("Select a folder to show on the frame")
+cb.pack()
+tk.Button(rootDropdownPopup, text="Show Selection", command=dropdownWindowPick).pack()
+rootDropdownPopup.protocol("WM_DELETE_WINDOW", dropdownWindowClose)
+rootDropdownPopup.mainloop()
+choice = folderChoice
+#folder_dir = folder_dir + folderArr[int(choice)] + '/'
+folder_dir = folder_dir + folderChoice + '/'
 
 imageList = []
 for images in os.listdir(folder_dir):
@@ -33,7 +43,7 @@ for images in os.listdir(folder_dir):
     if (images.endswith(".png") or images.endswith(".jpg") or images.endswith(".jpeg")):
         imageList.append(folder_dir + images)
 
-root = tkinter.Tk()
+root = tk.Tk()
 frameWidth = root.winfo_screenwidth()
 frameHeight = root.winfo_screenheight()
 
@@ -75,12 +85,8 @@ while running:
         image = Image.open(img)
         imw, imh = image.size
         aspectRatio = imw/imh
-        if imw > imh:
-            imh = frameHeight
-            imw = round(aspectRatio * frameHeight)
-        else:
-            imw = frameWidth
-            imh = round(aspectRatio * frameWidth)
+        imh = frameHeight
+        imw = round(aspectRatio * frameHeight)
         noFrames = config.imageFrames()
         for i in range(1, noFrames):
             imageWidth = imw + i*(imw*0.05)/noFrames#functions.QuadraticEaseOutRound(i, noFrames, imw*0.05)
